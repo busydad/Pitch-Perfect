@@ -14,6 +14,7 @@ class PlaySoundsViewController: UIViewController {
     @IBOutlet weak var stopButton: UIButton!
     
     var audioPlayer: AVAudioPlayer!
+    var echoAudioPlayer: AVAudioPlayer!
     var audioEngine: AVAudioEngine!
     var audioFile:AVAudioFile!
     var receivedAudio:RecordedAudio!
@@ -27,6 +28,7 @@ class PlaySoundsViewController: UIViewController {
         self.title = "Play"
         
         audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
+        echoAudioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
         audioPlayer.enableRate = true
        
         audioEngine = AVAudioEngine()
@@ -35,6 +37,7 @@ class PlaySoundsViewController: UIViewController {
     
     func stopAudioPlayerAndEngine() {
         audioPlayer.stop()
+        echoAudioPlayer.stop()
         audioEngine.stop()
         audioEngine.reset()
     }
@@ -70,6 +73,20 @@ class PlaySoundsViewController: UIViewController {
         audioPlayerNode.play()
     }
     
+    func playEcho () {
+        stopAudioPlayerAndEngine()
+        
+        audioPlayer.currentTime = 0;
+        audioPlayer.play()
+        
+        // Play the sound asynchronously with a little delay
+        let delay:NSTimeInterval = 0.1 // 100ms
+        let playtime = echoAudioPlayer.deviceCurrentTime + delay
+        echoAudioPlayer.currentTime = 0
+        echoAudioPlayer.volume = 0.8;
+        echoAudioPlayer.playAtTime(playtime)
+    }
+    
     // MARK: - IBActions
     
     @IBAction func playSlowAudio(sender: UIButton) {
@@ -92,5 +109,8 @@ class PlaySoundsViewController: UIViewController {
         stopAudioPlayerAndEngine()
     }
    
+    @IBAction func playEchoAudio(sender: UIButton) {
+        playEcho()
+    }
     
 }
