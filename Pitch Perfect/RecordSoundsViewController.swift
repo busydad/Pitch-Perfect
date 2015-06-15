@@ -74,9 +74,18 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     // MARK: - AVAudioRecorderDelegate
     
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!, successfully flag: Bool) {
-        if flag {
+        if !flag {
+            // Show PlaySoundsVie since recording did finish successfully
             let recordedAudio = RecordedAudio(url: recorder.url)
             self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
+        } else {
+            // Recording failed. Show alert and "reset" audioRecorder
+            let alertController = UIAlertController(title: "Opps!", message: "Something went wrong. Your recording wasn't saved. Try again", preferredStyle: .Alert)
+            let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: { (action) -> Void in
+                self.audioRecorder = nil;
+            })
+            alertController.addAction(okAction)
+            presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
