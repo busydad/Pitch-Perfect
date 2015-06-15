@@ -74,7 +74,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     // MARK: - AVAudioRecorderDelegate
     
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!, successfully flag: Bool) {
-        if !flag {
+        if flag {
             // Show PlaySoundsVie since recording did finish successfully
             let recordedAudio = RecordedAudio(url: recorder.url)
             self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
